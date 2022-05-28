@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Practica2_MontasellVallsGerar_NogueraRecasensAntoniJordi</string>
+    <string name="user">User</string>
+    <string name="password">Password</string>
+    <string name="logIn">Log in</string>
+    <string name="singIn">Sing in</string>
+    <string name="letter">Letter</string>
+    <string name="word">Word</string>
+    <string name="enter">Enter</string>
+    <string name="solve">Solve</string>
+</resources>

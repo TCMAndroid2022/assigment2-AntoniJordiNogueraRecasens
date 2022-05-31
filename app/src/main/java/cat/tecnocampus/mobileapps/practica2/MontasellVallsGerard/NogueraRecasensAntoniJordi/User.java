@@ -1,5 +1,6 @@
 package cat.tecnocampus.mobileapps.practica2.MontasellVallsGerard.NogueraRecasensAntoniJordi;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Embedded;
 import androidx.room.Entity;
@@ -13,6 +14,7 @@ public class User {
     public int uid;
     */
     @PrimaryKey
+    @NonNull
     @ColumnInfo(name="nick_name")
     public String nickName;
 

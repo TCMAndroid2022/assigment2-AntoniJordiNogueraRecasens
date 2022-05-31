@@ -11,4 +11,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
+
+    /* TODO: Create Click Function To Log In */
+    /* TODO: Create Click Function To Sing Up */
 }

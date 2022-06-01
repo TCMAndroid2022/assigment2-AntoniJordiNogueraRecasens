@@ -11,16 +11,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 public class PlayGame extends AppCompatActivity {
-    private TextView wordToGuess;
+    private TextView guessingLetter;
     private TextView actualWord;
+    private String letterToGuess;
     private String sToGuess;
-    private String sActWord;
+    private String sActWord = "PALABRA";
     ActivityResultLauncher<Intent> myActivityResultLauncher;
 
     @Override
@@ -28,9 +32,12 @@ public class PlayGame extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_game);
 
-        wordToGuess = (EditText) findViewById(R.id.et_Letter);
+        guessingLetter = (EditText) findViewById(R.id.et_Letter);
+        actualWord = (TextView) findViewById(R.id.tv_Answer);
+
+        setActualWordTextView();
         
-        wordToGuess.addTextChangedListener(new TextWatcher() {
+        guessingLetter.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -38,12 +45,14 @@ public class PlayGame extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                /* TODO: When Text Changes Check If Letter Is On Word */
+                letterToGuess = guessingLetter.getText().toString();
+                Log.i("PlayGame", letterToGuess);
+
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-
+                checkActualWord();
             }
         });
         myActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
@@ -54,6 +63,32 @@ public class PlayGame extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setActualWordTextView() {
+        for(char ch : sActWord.toCharArray()) {
+            String s = actualWord.getText().toString();
+            s += "_";
+            actualWord.setText(s);
+        }
+    }
+
+    private void checkActualWord() {
+        if(sActWord.toUpperCase(Locale.ROOT).contains(letterToGuess.toUpperCase())) {
+            char guessLetter = Character.toUpperCase(letterToGuess.charAt(0));
+            int actualPosition = 0;
+            for(char ch : sActWord.toCharArray()) {
+                String s = actualWord.getText().toString();
+                StringBuilder sb = new StringBuilder(s);
+                ch = Character.toUpperCase(ch);
+                if(ch == guessLetter) {
+                    sb.setCharAt(actualPosition, guessLetter);
+                }
+                s = sb.toString();
+                actualWord.setText(s);
+                actualPosition++;
+            }
+        }
     }
 
     @Override

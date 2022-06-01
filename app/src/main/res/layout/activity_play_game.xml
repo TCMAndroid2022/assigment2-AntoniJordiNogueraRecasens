@@ -20,14 +20,19 @@
         android:id="@+id/et_Letter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
         android:ems="10"
         android:hint="@string/letter"
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:maxLength="1"/>
 
-
+    <Button
+        android:id="@+id/btn_Word2"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:onClick="checkLetterOnClick"
+        android:text="@string/check" />
 
     <EditText
         android:id="@+id/et_Word"

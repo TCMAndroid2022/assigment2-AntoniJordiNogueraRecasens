@@ -14,6 +14,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -36,25 +37,7 @@ public class PlayGame extends AppCompatActivity {
         actualWord = (TextView) findViewById(R.id.tv_Answer);
 
         setActualWordTextView();
-        
-        guessingLetter.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                letterToGuess = guessingLetter.getText().toString();
-                Log.i("PlayGame", letterToGuess);
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                checkActualWord();
-            }
-        });
         myActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
@@ -76,14 +59,12 @@ public class PlayGame extends AppCompatActivity {
     private void checkActualWord() {
         if(sActWord.toUpperCase(Locale.ROOT).contains(letterToGuess.toUpperCase())) {
             char guessLetter = Character.toUpperCase(letterToGuess.charAt(0));
+            String s = actualWord.getText().toString();
+            StringBuilder sb = new StringBuilder(s);
             int actualPosition = 0;
             for(char ch : sActWord.toCharArray()) {
-                String s = actualWord.getText().toString();
-                StringBuilder sb = new StringBuilder(s);
                 ch = Character.toUpperCase(ch);
-                if(ch == guessLetter) {
-                    sb.setCharAt(actualPosition, guessLetter);
-                }
+                if(ch == guessLetter) { sb.setCharAt(actualPosition, guessLetter); }
                 s = sb.toString();
                 actualWord.setText(s);
                 actualPosition++;
@@ -105,5 +86,10 @@ public class PlayGame extends AppCompatActivity {
                 break;
         }
         return (super.onOptionsItemSelected(item));
+    }
+
+    public void checkLetterOnClick(View view) {
+        letterToGuess = guessingLetter.getText().toString();
+        checkActualWord();
     }
 }

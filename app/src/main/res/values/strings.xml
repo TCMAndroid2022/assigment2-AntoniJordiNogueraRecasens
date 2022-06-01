@@ -8,4 +8,5 @@
     <string name="word">Enter the word to guess</string>
     <string name="enter">Enter</string>
     <string name="solve">Solve</string>
+    <string name="check">Check</string>
 </resources>

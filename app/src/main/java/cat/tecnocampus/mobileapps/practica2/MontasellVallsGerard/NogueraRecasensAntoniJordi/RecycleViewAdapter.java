@@ -29,8 +29,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public void onBindViewHolder(@NonNull RecycleViewAdapter.ViewHolder holder, int position) {
         User currentUser=data.get(position);
         holder.tv_User.setText(String.valueOf(currentUser.getNickName()));
-        holder.tv_Punctuation.setText(currentUser.getPunctuation());
-        holder.tv_NumPlays.setText(currentUser.getNumGames());
+        holder.tv_Punctuation.setText(String.valueOf(currentUser.getPunctuation()));
+        holder.tv_NumPlays.setText(String.valueOf(currentUser.getNumGames()));
     }
 
     @Override

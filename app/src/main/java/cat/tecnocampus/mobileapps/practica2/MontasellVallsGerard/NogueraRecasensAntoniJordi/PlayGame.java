@@ -48,6 +48,23 @@ public class PlayGame extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_rank, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.mi_rank:
+                Intent intent =new Intent(this,Ranking.class);
+                startActivity(intent);
+                break;
+        }
+        return (super.onOptionsItemSelected(item));
+    }
+
+
     private void setActualWordTextView() {
         for(char ch : sActWord.toCharArray()) {
             String s = actualWord.getText().toString();
@@ -72,21 +89,6 @@ public class PlayGame extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu_rank, menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.mi_rank:
-                Intent intent =new Intent(this,Ranking.class);
-                myActivityResultLauncher.launch(intent);
-                break;
-        }
-        return (super.onOptionsItemSelected(item));
-    }
 
     public void checkLetterOnClick(View view) {
         letterToGuess = guessingLetter.getText().toString();

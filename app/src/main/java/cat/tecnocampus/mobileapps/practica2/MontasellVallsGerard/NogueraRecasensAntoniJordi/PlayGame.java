@@ -18,34 +18,42 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Locale;
 
 public class PlayGame extends AppCompatActivity {
+
+
     private TextView guessingLetter;
     private TextView actualWord;
     private String letterToGuess;
     private String sToGuess;
     private String sActWord = "PALABRA";
-    ActivityResultLauncher<Intent> myActivityResultLauncher;
+    RequestQueue queue;
+    private String url="https://random-word-api.herokuapp.com/word";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_game);
+        queue = Volley.newRequestQueue(getApplicationContext());
+        getStringRequest();
 
         guessingLetter = (EditText) findViewById(R.id.et_Letter);
         actualWord = (TextView) findViewById(R.id.tv_Answer);
 
         setActualWordTextView();
 
-        myActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                if(result.getResultCode()==RESULT_OK){
-
-                }
-            }
-        });
     }
 
     @Override
@@ -93,5 +101,30 @@ public class PlayGame extends AppCompatActivity {
     public void checkLetterOnClick(View view) {
         letterToGuess = guessingLetter.getText().toString();
         checkActualWord();
+    }
+
+    public void getStringRequest() {
+        Log.v("Test", "response");
+        StringRequest stringRequest= new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                sActWord=response.substring(2,response.length()-2);
+                Log.v("Test",sActWord);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.v("Test", "Error al StringRequest");
+            }
+        });
+        queue.add(stringRequest);
+    }
+
+    private void saveGame(int punctuation){
+        Intent intent = getIntent();
+        String nickName = intent.getStringExtra("nick-name");
+        Game game = new Game(nickName,sActWord,punctuation);
+        UserController userController = UserController.getUserController();
+        userController.insertGame(game);
     }
 }

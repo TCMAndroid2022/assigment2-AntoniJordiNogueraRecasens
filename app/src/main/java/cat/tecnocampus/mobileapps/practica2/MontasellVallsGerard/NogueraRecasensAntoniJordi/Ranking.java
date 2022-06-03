@@ -56,4 +56,9 @@ public class Ranking extends AppCompatActivity implements rv_RankAdapter.ItemCli
         intent.putExtra("nick-name", actual.getNickName());
         startActivity(intent);
     }
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
 }

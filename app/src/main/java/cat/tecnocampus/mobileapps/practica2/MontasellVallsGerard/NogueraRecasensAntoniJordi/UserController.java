@@ -25,6 +25,8 @@ public class UserController {
 
     public void insertUser(User user){userDao.insert(user);}
 
+    public void insertGame(Game game){gameDao.insert(game);}
+
     public List<User> listUser(){return userDao.getAll();}
 
     public List<String> getAllNicks() {return userDao.getAllNicks();}

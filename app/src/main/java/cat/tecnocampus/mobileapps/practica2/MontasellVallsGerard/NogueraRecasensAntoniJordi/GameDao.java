@@ -17,4 +17,7 @@ public interface GameDao {
 
     @Delete
     void delete(Game game);
+
+    @Query("Select * FROM Game WHERE player_nick_name LIKE :nickName ")
+    List<Game> gatAllGamesByNick(String nickName);
 }

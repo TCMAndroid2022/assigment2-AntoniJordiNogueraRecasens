@@ -11,12 +11,16 @@ public class UserController {
     private UserDao userDao;
     private GameDao gameDao;
 
+    public static UserController getUserController() {
+        return userController;
+    }
 
     public UserController(Application application){
         AppDatabase db = Room.databaseBuilder(application,AppDatabase.class,"database-name")
                 .allowMainThreadQueries().build();
         userDao=db.userDao();
         gameDao=db.gameDao();
+        userController = this;
     }
 
     public void insertUser(User user){userDao.insert(user);}
@@ -25,5 +29,7 @@ public class UserController {
 
     public List<String> getAllNicks() {return userDao.getAllNicks();}
 
-    public List<User> getAll() {return userDao.getAll();}
+    public List<User> getAllUsers() {return userDao.getAll();}
+
+    public List<Game> getAllGamesByUser(String nickName) {return gameDao.gatAllGamesByNick(nickName);}
 }

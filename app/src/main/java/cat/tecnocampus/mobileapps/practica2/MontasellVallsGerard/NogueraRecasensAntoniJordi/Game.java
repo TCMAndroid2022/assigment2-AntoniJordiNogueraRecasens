@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Random;
+
 @Entity
 public class Game {
     @PrimaryKey
@@ -16,8 +18,8 @@ public class Game {
 
     int punctuation;
 
-    public Game(int id, String playerNickName, String word, int punctuation) {
-        this.id = id;
+    public Game(String playerNickName, String word, int punctuation) {
+        this.id = new Random().nextInt(99999);;
         this.playerNickName = playerNickName;
         this.word = word;
         this.punctuation = punctuation;

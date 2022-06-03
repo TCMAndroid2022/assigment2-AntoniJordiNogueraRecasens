@@ -3,6 +3,7 @@ package cat.tecnocampus.mobileapps.practica2.MontasellVallsGerard.NogueraRecasen
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
@@ -22,7 +23,7 @@ public interface UserDao {
     @Query("SELECT* FROM user WHERE first_name LIKE :first AND last_name LIKE :last LIMIT 1")
     User findByName(String first, String last);*/
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     void insert(User user);
 
     @Delete

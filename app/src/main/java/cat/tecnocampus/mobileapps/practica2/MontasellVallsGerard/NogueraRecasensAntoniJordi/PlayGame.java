@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -36,9 +37,11 @@ public class PlayGame extends AppCompatActivity {
 
     private TextView guessingLetter;
     private TextView actualWord;
+    private TextView guessWord;
     private String letterToGuess;
     private String sToGuess;
     private String sActWord = "PALABRA";
+    private int nLettersUsed = 0;
     RequestQueue queue;
     private String url="https://random-word-api.herokuapp.com/word";
 
@@ -51,9 +54,9 @@ public class PlayGame extends AppCompatActivity {
 
         guessingLetter = (EditText) findViewById(R.id.et_Letter);
         actualWord = (TextView) findViewById(R.id.tv_Answer);
+        guessWord = (TextView) findViewById(R.id.et_Word);
 
         setActualWordTextView();
-
     }
 
     @Override
@@ -100,7 +103,22 @@ public class PlayGame extends AppCompatActivity {
 
     public void checkLetterOnClick(View view) {
         letterToGuess = guessingLetter.getText().toString();
+        nLettersUsed++;
         checkActualWord();
+    }
+
+    public void checkWordOnClick(View view) {
+        int punctuation = 0;
+        sToGuess = guessWord.getText().toString();
+
+        if(sActWord.toUpperCase(Locale.ROOT).equals(sToGuess.toUpperCase(Locale.ROOT))) {
+            punctuation = ((sActWord.length() - nLettersUsed) / nLettersUsed) * 10;
+            Toast.makeText(this, "CONGRATULATIONS, YOU OBTAINED " + punctuation + " POINTS", Toast.LENGTH_LONG).show();
+        }
+        else { Toast.makeText(this, "OOPS, SEEMS YOU HAVE NOT GUESSED IT, MORE LUCK NEXT TIME", Toast.LENGTH_LONG).show(); }
+
+        Log.v("PUNCTUATION", "Punctuation: " + punctuation);
+        saveGame(punctuation);
     }
 
     public void getStringRequest() {
@@ -114,7 +132,7 @@ public class PlayGame extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.v("Test", "Error al StringRequest");
+                Log.e("Test", "Error al StringRequest");
             }
         });
         queue.add(stringRequest);
@@ -122,9 +140,10 @@ public class PlayGame extends AppCompatActivity {
 
     private void saveGame(int punctuation){
         Intent intent = getIntent();
-        String nickName = intent.getStringExtra("nick-name");
+        String nickName = intent.getStringExtra("nickName");
         Game game = new Game(nickName,sActWord,punctuation);
         UserController userController = UserController.getUserController();
         userController.insertGame(game);
     }
+
 }

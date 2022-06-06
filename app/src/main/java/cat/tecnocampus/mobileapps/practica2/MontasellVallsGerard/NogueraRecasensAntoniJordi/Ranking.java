@@ -23,8 +23,6 @@ public class Ranking extends AppCompatActivity implements rv_RankAdapter.ItemCli
 
     private void createDummy(){
         dataSet=new ArrayList<>();
-        dataSet.add(new User("Faker",100,12));
-        dataSet.add(new User("Gerahrdmv",150,15));
         List<User> users= userController.getAllUsers();
         for(User user :  users){
             dataSet.add(user);

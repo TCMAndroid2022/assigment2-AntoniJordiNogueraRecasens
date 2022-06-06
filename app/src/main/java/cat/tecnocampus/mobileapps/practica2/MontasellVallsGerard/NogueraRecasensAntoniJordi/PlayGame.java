@@ -1,16 +1,10 @@
 package cat.tecnocampus.mobileapps.practica2.MontasellVallsGerard.NogueraRecasensAntoniJordi;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,25 +17,26 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Locale;
 
 public class PlayGame extends AppCompatActivity {
 
 
-    private TextView guessingLetter;
-    private TextView actualWord;
-    private TextView guessWord;
-    private String letterToGuess;
+    private EditText guessingLetter;
+    private TextView answerWord;
+    private EditText guessingWord;
+
+    private String lastLetter="";
+
     private String sToGuess;
-    private String sActWord = "PALABRA";
+
+    private String sActWord = "";
     private int nLettersUsed = 0;
+
+    private UserController userController;
     RequestQueue queue;
     private String url="https://random-word-api.herokuapp.com/word";
 
@@ -49,14 +44,17 @@ public class PlayGame extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_game);
+        userController = UserController.getUserController();
+
+        guessingLetter = findViewById(R.id.et_Letter);
+        answerWord = findViewById(R.id.tv_Answer);
+        guessingWord = findViewById(R.id.et_Word);
+
         queue = Volley.newRequestQueue(getApplicationContext());
         getStringRequest();
 
-        guessingLetter = (EditText) findViewById(R.id.et_Letter);
-        actualWord = (TextView) findViewById(R.id.tv_Answer);
-        guessWord = (TextView) findViewById(R.id.et_Word);
 
-        setActualWordTextView();
+
     }
 
     @Override
@@ -64,6 +62,7 @@ public class PlayGame extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_rank, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -77,57 +76,77 @@ public class PlayGame extends AppCompatActivity {
 
 
     private void setActualWordTextView() {
+        String s = answerWord.getText().toString();
         for(char ch : sActWord.toCharArray()) {
-            String s = actualWord.getText().toString();
             s += "_";
-            actualWord.setText(s);
+        }
+        answerWord.setText(s);
+    }
+
+    public void checkLetterOnClick(View view) {
+        String letterToGuess = guessingLetter.getText().toString();
+        if(lastLetter != letterToGuess){
+            lastLetter = letterToGuess;
+            nLettersUsed++;
+            checkActualWord(letterToGuess);
         }
     }
 
-    private void checkActualWord() {
-        if(sActWord.toUpperCase(Locale.ROOT).contains(letterToGuess.toUpperCase())) {
+    private void checkActualWord(String letterToGuess) {
+        //Check if the word contains the letter
+        if(sActWord.toUpperCase().contains(letterToGuess.toUpperCase())) {
+
             char guessLetter = Character.toUpperCase(letterToGuess.charAt(0));
-            String s = actualWord.getText().toString();
+            String s = answerWord.getText().toString();
+
             StringBuilder sb = new StringBuilder(s);
             int actualPosition = 0;
+
             for(char ch : sActWord.toCharArray()) {
                 ch = Character.toUpperCase(ch);
+                //Check if letter is in this position, true: change de _ for the letter
                 if(ch == guessLetter) { sb.setCharAt(actualPosition, guessLetter); }
+                //Parse it to string again and changed the text in screen
                 s = sb.toString();
-                actualWord.setText(s);
+                answerWord.setText(s);
+                //Prepare to check the next position
                 actualPosition++;
             }
         }
+        guessingLetter.setText("");
     }
 
-
-    public void checkLetterOnClick(View view) {
-        letterToGuess = guessingLetter.getText().toString();
-        nLettersUsed++;
-        checkActualWord();
-    }
 
     public void checkWordOnClick(View view) {
-        int punctuation = 0;
-        sToGuess = guessWord.getText().toString();
+        float punctuation = 0;
+        sToGuess = guessingWord.getText().toString();
+        //Security when try to click when word is empty
+        if(sToGuess.compareTo("")!=0) {
+            //Check if the word and answer are the same
+            if (sActWord.toUpperCase().equals(sToGuess.toUpperCase())) {
+                // I have to do the calculations this way if I try to do them all at once it fails
+                punctuation = ((sActWord.length() - nLettersUsed));
+                punctuation = punctuation / sActWord.length();
+                punctuation = punctuation * 10.0f;
+                Toast.makeText(this, "CONGRATULATIONS, YOU OBTAINED " + punctuation + " POINTS", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "OOPS, SEEMS YOU HAVE NOT GUESSED IT, MORE LUCK NEXT TIME", Toast.LENGTH_LONG).show();
+            }
 
-        if(sActWord.toUpperCase(Locale.ROOT).equals(sToGuess.toUpperCase(Locale.ROOT))) {
-            punctuation = ((sActWord.length() - nLettersUsed) / nLettersUsed) * 10;
-            Toast.makeText(this, "CONGRATULATIONS, YOU OBTAINED " + punctuation + " POINTS", Toast.LENGTH_LONG).show();
+            Log.v("PUNCTUATION", "Punctuation: " + punctuation);
+            guessingWord.setText("");
+            answerWord.setText("");
+            saveGame(punctuation);
         }
-        else { Toast.makeText(this, "OOPS, SEEMS YOU HAVE NOT GUESSED IT, MORE LUCK NEXT TIME", Toast.LENGTH_LONG).show(); }
-
-        Log.v("PUNCTUATION", "Punctuation: " + punctuation);
-        saveGame(punctuation);
     }
 
     public void getStringRequest() {
-        Log.v("Test", "response");
         StringRequest stringRequest= new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 sActWord=response.substring(2,response.length()-2);
                 Log.v("Test",sActWord);
+                setActualWordTextView();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -138,12 +157,20 @@ public class PlayGame extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
-    private void saveGame(int punctuation){
+    private void saveGame(float punctuation){
         Intent intent = getIntent();
         String nickName = intent.getStringExtra("nickName");
         Game game = new Game(nickName,sActWord,punctuation);
-        UserController userController = UserController.getUserController();
         userController.insertGame(game);
+        actUserInfo(nickName, punctuation);
+        getStringRequest();
+    }
+
+    private void actUserInfo(String nickName, float punctuation) {
+        User user = userController.findByNick(nickName);
+        user.punctuation +=  punctuation;
+        user.numGames++;
+        userController.updateUser(new User(user.getNickName(),user.getPunctuation(),user.getNumGames()));
     }
 
 }

@@ -19,12 +19,12 @@ public class User {
     public String nickName;
 
     @ColumnInfo(name = "punctuation")
-    public int punctuation;
+    public float punctuation;
 
     @ColumnInfo(name = "num_games")
     public int numGames;
 
-    public User(String nickName, int punctuation, int numGames) {
+    public User(String nickName, float punctuation, int numGames) {
         this.nickName = nickName;
         this.punctuation = punctuation;
         this.numGames = numGames;
@@ -34,7 +34,7 @@ public class User {
         return nickName;
     }
 
-    public int getPunctuation() {
+    public float getPunctuation() {
         return punctuation;
     }
 

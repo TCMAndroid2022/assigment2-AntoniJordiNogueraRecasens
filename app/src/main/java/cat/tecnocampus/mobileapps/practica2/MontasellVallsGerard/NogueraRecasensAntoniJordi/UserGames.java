@@ -22,8 +22,11 @@ public class UserGames extends AppCompatActivity {
     String nickName;
     private void createDummy(){
         dataSet=new ArrayList<>();
-        dataSet.add(new Game("Gerahrdmv","palabra",15));
-        dataSet.add(new Game("Gerahrdmv","word",13));
+        //Check if dommy is ready
+        //if() {
+            userController.insertGame(new Game("Gerahrdmv", "palabra", 15));
+            userController.insertGame(new Game("Gerahrdmv", "word", 13));
+        //}
         List<Game> games= userController.getAllGamesByUser(nickName);
         for(Game game :  games){
             dataSet.add(game);

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Dao
 public interface GameDao {
-    @Query("Select * FROM Game")
+    @Query("Select * FROM Game ")
     List<Game> getAll();
 
     @Insert

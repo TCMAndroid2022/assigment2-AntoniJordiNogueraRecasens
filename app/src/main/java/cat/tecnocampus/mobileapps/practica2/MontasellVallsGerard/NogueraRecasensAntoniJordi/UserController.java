@@ -34,4 +34,8 @@ public class UserController {
     public List<User> getAllUsers() {return userDao.getAll();}
 
     public List<Game> getAllGamesByUser(String nickName) {return gameDao.gatAllGamesByNick(nickName);}
+
+    public User findByNick(String nickName) {return userDao.findByNick(nickName);}
+
+    public void updateUser(User user) {userDao.updateUser(user);}
 }

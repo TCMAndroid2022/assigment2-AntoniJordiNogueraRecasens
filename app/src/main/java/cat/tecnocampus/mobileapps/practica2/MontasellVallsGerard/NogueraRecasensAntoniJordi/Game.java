@@ -16,9 +16,9 @@ public class Game {
 
     String word;
 
-    int punctuation;
+    float punctuation;
 
-    public Game(String playerNickName, String word, int punctuation) {
+    public Game(String playerNickName, String word, float punctuation) {
         this.id = new Random().nextInt(99999);;
         this.playerNickName = playerNickName;
         this.word = word;
@@ -37,7 +37,7 @@ public class Game {
         return word;
     }
 
-    public int getPunctuation() {
+    public float getPunctuation() {
         return punctuation;
     }
 }

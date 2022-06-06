@@ -136,6 +136,7 @@ public class PlayGame extends AppCompatActivity {
             Log.v("PUNCTUATION", "Punctuation: " + punctuation);
             guessingWord.setText("");
             answerWord.setText("");
+            nLettersUsed=0;
             saveGame(punctuation);
         }
     }

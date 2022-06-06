@@ -20,4 +20,5 @@ If you want to see all the games that one player have done click in topo of that
 
 Extra information:
 The Gerhardmv and Faker are 2 Dummy users, you can see them imn the ranking, and Gerhardmv every time you enter to someone in thje ranking fake 2 new games but dosent update the points in the ranking, only show the gfames in his detail screen.
+
 ---

@@ -9,4 +9,8 @@
     <string name="enter">Enter</string>
     <string name="solve">Solve</string>
     <string name="check">Check</string>
+    <string name="nickName">Nick Name</string>
+    <string name="punctuation">Punctuation</string>
+    <string name="numberGames">Number of Games</string>
+    <string name="wordGuessed">Word</string>
 </resources>
